@@ -8,7 +8,7 @@
           :title="item.name" 
           :color="geometry == item.name ? 'primary' : ''"
           link
-          @mouseup="changeGeometry(item)"
+          @mouseup="change(item)"
           >
           <v-card-text>
             {{ item.text }}
@@ -49,14 +49,9 @@ const geometries = [
 
 const geometry = ref(props.data)
 
-const changeGeometry = ref((item) => {
+const change = (item) => {
   if(geometry.value != item.name) { 
-    emit('changeqq', item.name) 
+    emit('change', item.name) 
   }
-})
-
+}
 </script>
-
-<style lang="scss" scoped>
-
-</style>
