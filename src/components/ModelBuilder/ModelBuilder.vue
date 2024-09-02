@@ -36,7 +36,7 @@
           <component 
             :is="step.component" 
             :data="projectModel[step.key]" 
-            @change="onChange"/>
+            @changeqq="onChange"/>
         </v-tabs-window-item>
       </v-tabs-window>
       

@@ -27,7 +27,7 @@ const props = defineProps({
   data: String
 })
 
-const emit = defineEmits(['change'])
+const emit = defineEmits(['changeqq'])
 
 const geometries = [
 {
@@ -51,7 +51,7 @@ const geometry = ref(props.data)
 
 const changeGeometry = ref((item) => {
   if(geometry.value != item.name) { 
-    emit('change', item.name) 
+    emit('changeqq', item.name) 
   }
 })
 
