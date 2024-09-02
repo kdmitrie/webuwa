@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
   </v-container>
-  {{ geometry}}
+  --{{ geometry}}--
 </template>
 
 <script setup>
@@ -27,7 +27,7 @@ const props = defineProps({
   data: String
 })
 
-const emit = defineEmits(['changeqq'])
+const emit = defineEmits(['change'])
 
 const geometries = [
 {

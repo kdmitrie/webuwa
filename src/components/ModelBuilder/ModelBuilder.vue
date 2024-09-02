@@ -36,7 +36,7 @@
           <component 
             :is="step.component" 
             :data="projectModel[step.key]" 
-            @changeqq="onChange"/>
+            @change="onChange(step.key, $event)" />
         </v-tabs-window-item>
       </v-tabs-window>
       
@@ -45,18 +45,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 
 import BuildGeometry from './BuildGeometry.vue';
 import BuildSignal from './BuildSignal.vue';
 
-const projectModel = {
+const projectModel = reactive({
   geometry: '3D',
   signal: '2D-AS',
-}
+})
 
-function onChange(a, event) {
-  console.log(a, event)
+function onChange(key, value) {
+  projectModel[key] = value
 }
 
 const steps = [
