@@ -35,78 +35,27 @@
         <v-tabs-window-item v-for="step in steps" :value="step.name" :key="step.name">
           <component 
             :is="step.component" 
-            :data="projectModel[step.key]" 
-            @change="onChange(step.key, $event)" />
+            :config="config[step.key]" 
+            v-model="projectModel[step.key]" />
         </v-tabs-window-item>
       </v-tabs-window>
-      
+      {{ projectModel }}
     </v-card>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-
-import BuildGeometry from './BuildGeometry.vue';
-import BuildSignal from './BuildSignal.vue';
-
-const projectModel = reactive({
-  geometry: '3D',
-  signal: '2D-AS',
-})
-
-function onChange(key, value) {
-  projectModel[key] = value
-}
-
-const steps = [
-  {
-    name: 'Геометрия',
-    icon: 'mdi-cube-scan',
-    component: BuildGeometry,
-    key: 'geometry'
-  },
-  {
-    name: 'Сигнал',
-    icon: 'mdi-chart-bell-curve-cumulative',
-    component: BuildGeometry,
-    key: 'signal'
-  },
-  {
-    name: 'Среда',
-    icon: 'mdi-waves',
-    component: BuildSignal,
-    key: 'geometry'
-  },
-  {
-    name: 'Антенная система',
-    icon: 'mdi-antenna',
-    component: BuildSignal,
-    key: 'geometry'
-  },
-  {
-    name: 'Расчет',
-    icon: 'mdi-calculator',
-    component: BuildSignal,
-    key: 'geometry'
-  },
-  {
-    name: 'Результаты',
-    icon: 'mdi-chart-areaspline',
-    component: BuildSignal,
-    key: 'geometry'
-  }
-]
+import { ref } from 'vue';
+import config from './builderConfig.js'
+import steps from './builderSteps';
+import projectModel from './projectModel.js';
 
 const tab = ref(null)
-
-
 </script>
 
 <style scoped>
 .clickable { 
   cursor: pointer;
   text-decoration: underline;
-
 }
 </style>
