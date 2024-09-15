@@ -35,5 +35,15 @@ export default {
       {value: 'gauss', title: 'гауссовская'},
     ],
   },
+  medium: {
+    latitude: [
+      {value: 'N', title: 'Северная'},
+      {value: 'S', title: 'Южная'}
+    ],
+    longitude: [
+      {value: 'W', title: 'Западная'},
+      {value: 'E', title: 'Восточная'},
+    ],
+  },
   calc: geometries
 }

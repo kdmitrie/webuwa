@@ -9,7 +9,7 @@ const stringUCFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1, )
 class PropertiesModel {
   data = null
   check () { return false }
-  describe () { return  [1, 2] }
+  describe () { return  [] }
 }
 
 
@@ -81,87 +81,20 @@ class SignalModel extends PropertiesModel {
 }
 
 
+class MediumModel extends PropertiesModel {
+  describe () {
+    //console.log(this.data)
+    return [1, 2, 3]
+  }
+}
+
+
 class ProjectModel {
   geometry = new GeometryModel()
   signal = new SignalModel()
+  medium = new MediumModel()
   calc = new GeometryModel()
 }
-
-/*
-class ProjectModel1 {
-  geometry = null
-  signal = null
-  calc = null
-
-  check (key) {
-    const check = 'check' + key.charAt(0).toUpperCase() + key.slice(1)
-    if (!(check in this)) return false
-    return this[check]()
-  }
-
-  describe (key) {
-    const describe = 'describe' + key.charAt(0).toUpperCase() + key.slice(1)
-    if (!(describe in this)) return []
-    return this[describe]()
-  }
-
-  checkGeometry () {
-    return this.geometry != null
-  }
-
-  checkSignal () {
-    if (this.signal === null || this.signal.type === null) return false
-
-    switch (this.signal.type) {
-      case 'monochrom':
-        return Number(this.signal.freq) > 0
-      case 'impulse':
-        return (configValues(config.signal.impulseShape).includes(this.signal.shape) && 
-                (Number(this.signal.duration) > 0) && 
-                configValues(config.signal.timeUnits).includes(this.signal.units))
-      case 'packet':
-        return (configValues(config.signal.envelopeShape).includes(this.signal.shape) && 
-                (Number(this.signal.duration) > 0) && 
-                configValues(config.signal.timeUnits).includes(this.signal.units) && 
-                (Number(this.signal.freq) > 0)  && 
-                (Number(this.signal.deviation) >= 0))
-      case 'file':
-      break;
-      default:
-        return false
-    }
-  }
-
-  describeGeometry () {
-    return this.geometry === null ? [] : [`Пространство ${this.geometry}`]
-  }
-
-  describeSignal () {
-    if (this.signal === null || this.signal.type === null) return []
-
-    switch (this.signal.type) {
-      case 'monochrom':
-        return Number(this.signal.freq) > 0
-      case 'impulse':
-        return (['rect', 'gauss', 'sin', 'delta'].includes(this.signal.shape) && 
-                (Number(this.signal.duration) > 0) && 
-                ['sec', 'ms', 'mks'].includes(this.signal.units))
-      case 'packet':
-        return (['rect', 'gauss'].includes(this.signal.shape) && 
-                (Number(this.signal.duration) > 0) && 
-                ['sec', 'ms', 'mks'].includes(this.signal.units) && 
-                (Number(this.signal.freq) > 0)  && 
-                (Number(this.signal.deviation) >= 0))
-      case 'file':
-      break;
-      default:
-        return []
-    }  
-  }
-}*/
-
-//new ProjectModel1()
-
 
 const projectModel = reactive(new ProjectModel)
 

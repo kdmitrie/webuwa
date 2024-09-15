@@ -49,7 +49,7 @@ import config from './builderConfig.js'
 import steps from './builderSteps';
 import projectModel from './projectModel.js';
 
-const tab = ref('geometry')
+const tab = ref('medium')
 </script>
 
 <style scoped>

@@ -1,3 +1,4 @@
+import BuildMedium from './BuildMedium.vue';
 import BuildSignal from './BuildSignal.vue';
 import ListSelect from '../ui/ListSelect.vue';
 
@@ -17,8 +18,8 @@ export default [
   {
     name: 'Среда',
     icon: 'mdi-waves',
-    component: BuildSignal,
-    key: 'geometry'
+    component: BuildMedium,
+    key: 'medium'
   },
   {
     name: 'Антенная система',
