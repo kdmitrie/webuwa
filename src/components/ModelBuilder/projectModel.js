@@ -82,9 +82,18 @@ class SignalModel extends PropertiesModel {
 
 
 class MediumModel extends PropertiesModel {
+  check () {
+    if (!this.data || !this.data.points || !this.data.points.length) return false
+    return true
+  }
+
   describe () {
-    //console.log(this.data)
-    return [1, 2, 3]
+    if (!this.check()) return []
+    let items = [`Число точек: ${this.data.points.length}`]
+    if(this.data.figure) {
+      items.push(`Область - ${config.medium.figures[this.data.figure.type]}`)
+    }
+    return items
   }
 }
 

@@ -1,4 +1,6 @@
 import Dialog from './dialog'
+import { watch } from 'vue'
+import { inside } from './inside'
 
 class MapPointDialog extends Dialog {
   btnData = {
@@ -23,6 +25,24 @@ class MapPointDialog extends Dialog {
   }
 
 
+  setDeleteDialog(dialog) {
+    this.deleteDialog = dialog
+  }
+
+
+  setFigureGeometry (figure) {
+    this.figure = figure
+    watch(this.figure, () => { this.figureUpdate() })
+  }
+
+
+  figureUpdate () {
+    for (let pointId=0; pointId < this.pointList.length; pointId++) {
+      this.updatePointStyle (pointId)
+    }
+  }
+
+
   setPointList (pointList) {
     for (const k in pointList) {
       this.createPoint(pointList[k])
@@ -42,12 +62,19 @@ class MapPointDialog extends Dialog {
   }
 
 
+  afterDrag (pointId, coords) {
+    this.pointList[pointId].coords = coords
+    this.updatePointStyle(pointId)
+  }
+
+
   createPoint (item=null) {
     if (item === null) {
       item = {
         id: Object.keys(this.pointList).length,
         name: this.data.newName,
-        coords: this.data.newCoords
+        coords: this.data.newCoords,
+        inside: null
       }
     }
 
@@ -60,10 +87,12 @@ class MapPointDialog extends Dialog {
       { preset: "islands#blueDotIcon", draggable: true });
     this.map.geoObjects.add(pm);
 
-    pm.events.add('dragend', (e) => { this.pointList[item.id].coords = e.get('target').geometry.getCoordinates() });
+    pm.events.add('drag', (e) => { this.afterDrag(item.id, e.get('target').geometry.getCoordinates()) });
+    pm.events.add('dragend', (e) => { this.afterDrag(item.id, e.get('target').geometry.getCoordinates()) });
 
     this.placeMarkList.push(pm)
     this.pointList.push(item)
+    this.updatePointStyle(item.id)
   }
 
 
@@ -76,6 +105,16 @@ class MapPointDialog extends Dialog {
 
     this.pointList[this.data.id].name = this.data.newName
     this.pointList[this.data.id].coords = this.data.newCoords
+    this.updatePointStyle(this.data.id)
+  }
+
+
+  updatePointStyle (pointId) {
+    if (!this.pointList[pointId]) return;
+    
+    this.pointList[pointId].inside = inside(this.pointList[pointId].coords, this.figure)
+    const color = this.pointList[pointId].inside ? 'blue' : 'red'
+    this.placeMarkList[pointId].options.set('preset', `islands#${color}DotIcon`)
   }
 
 
@@ -93,18 +132,24 @@ class MapPointDialog extends Dialog {
   
 
   editPoint (id) {
-    console.log('edit', id)
     Object.assign(this.data, { visible: true, id: id, ...this.pointList[id], newName: this.pointList[id].name, newCoords: this.pointList[id].coords } )
     return false
   }
 
   
   deletePoint (id) {
+    this.deleteDialog.open(this.pointList[id])
+    return false
+  }
+  
+  
+  doDeletePoint (id) {
     this.map.geoObjects.remove(this.placeMarkList[id]);
     this.pointList[id] = null
-    return false
   }
 
 }
+
+
 
 export default new MapPointDialog()

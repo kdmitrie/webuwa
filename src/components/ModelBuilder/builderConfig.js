@@ -44,6 +44,10 @@ export default {
       {value: 'W', title: 'Западная'},
       {value: 'E', title: 'Восточная'},
     ],
+    figures: {
+      rect: 'прямоугольник',
+      circle: 'круг'
+    },
   },
   calc: geometries
 }

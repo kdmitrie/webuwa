@@ -57,6 +57,51 @@
         </v-card>
       </v-form>
     </v-dialog>
+
+    <v-dialog v-model="pointDeleteDialog.visible" width="auto">
+      <v-card
+        max-width="400"
+        prepend-icon="mdi-delete"
+        :title="`Удалить точку &quot;${pointDeleteDialog.data.name}&quot;?`"
+      >
+        <template v-slot:actions>
+          <v-btn color="primary" text="Удалить" @click="pointDeleteDialog.delete()" />
+          <v-btn class="ms-auto" text="Отмена" @click="pointDeleteDialog.close()" />
+        </template>
+      </v-card>
+    </v-dialog>
+
+
+    <v-card title="Список точек на карте">
+      <v-table v-if="points.length">
+        <thead>
+          <tr>
+            <th>Действия</th>
+            <th>Название точки</th>
+            <th>Координаты</th>
+          </tr>        
+        </thead>
+        <tbody>
+          <tr v-for="point in points" :key="point">
+            <td>
+              <v-btn density="compact" icon="mdi-pencil" @click="mapPointDialog.editPoint(point.id)"></v-btn>
+              &nbsp;
+              <v-btn density="compact" icon="mdi-delete" @click="pointDeleteDialog.open(point)"></v-btn>
+            </td>
+            <td>{{ point.name }}</td>
+            <td>
+              {{ formatPoint(point.coords) }}
+              <div v-if="!point.inside" class="point-outside">Точка вне области моделирования</div>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+      <p v-else>Точек пока нет</p>
+      <hr>
+      {{ mapPointList }}
+      <hr>
+    </v-card>
+
   </div>
 </template>
 
@@ -68,6 +113,10 @@ import { ruleNonEmpty } from '@/utils/inputRules';
 import mapCenterDialog from './ymap/center'
 import mapPointDialog from './ymap/points'
 import mapFiguresDialog from './ymap/figures'
+import pointDeleteDialog from './ymap/delete'
+
+pointDeleteDialog.setDeleteDialog(mapPointDialog)
+mapPointDialog.setDeleteDialog(pointDeleteDialog)
 
 const points = defineModel('points')
 const figure = defineModel('figure')
@@ -101,11 +150,11 @@ function createMap () {
 
     mapFiguresDialog.setMap(ym, map)
     mapFiguresDialog.createMapBtn()
-    //mapFiguresDialog.geometry = mapFigureGeometry
     mapFiguresDialog.setGeometry(mapFigureGeometry)
 
 
     mapPointDialog.setMap(ym, map)
+    mapPointDialog.setFigureGeometry(mapFigureGeometry)
     mapPointDialog.createMapBtn()
     mapPointDialog.form = mapPointDialogForm
     mapPointDialog.setPointList(mapPointList)
@@ -116,8 +165,23 @@ function createMap () {
   }
 }
 
+function formatPoint (coords) {
+  const latitude = Math.round((Math.abs(coords[0]) + Number.EPSILON) * 1e7) / 1e7
+  const latitude_type = coords[0] > 0 ? 'С.Ш.' : 'Ю.Ш.'
+  const longitude = Math.round((Math.abs(coords[1]) + Number.EPSILON) * 1e7) / 1e7
+  const longitude_type = coords[1] > 0 ? 'В.Д.' : 'З.Д.'
+  return `${latitude}° ${latitude_type}; ${longitude}° ${longitude_type}`
+}
+
 onMounted(() => { loadScript(createMap) })
 
 watch(mapPointList, () => { points.value = mapPointList.filter((point) => point) })
 watch(mapFigureGeometry, () => { figure.value = mapFigureGeometry.type ? mapFigureGeometry : {} })
 </script>
+
+<style scoped>
+.point-outside {
+  font-size: small;
+  color: rgb(var(--v-theme-error))
+}
+</style>
